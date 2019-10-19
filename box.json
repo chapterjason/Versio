@@ -1,0 +1,9 @@
+{
+    "main": "bin/versio",
+    "output": "build/versio.phar",
+    "compression": "GZ",
+    "force-autodiscovery": true,
+    "directories": [
+        "config"
+    ]
+}

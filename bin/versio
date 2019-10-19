@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+
+use Versio\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Versio\CustomKernel;
+
+if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+    echo 'Warning: The console should be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL;
+}
+
+set_time_limit(0);
+require dirname(__DIR__).'/vendor/autoload.php';
+$input = new ArgvInput();
+require dirname(__DIR__).'/config/bootstrap.php';
+
+$kernel = new CustomKernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+$application = new Application($kernel);
+$application->run($input);
