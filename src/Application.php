@@ -16,6 +16,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Versio\Version\Version;
+use function strpos;
 
 class Application extends BaseApplication
 {
@@ -27,7 +29,12 @@ class Application extends BaseApplication
     public function __construct(KernelInterface $kernel)
     {
         $this->kernel = $kernel;
-        parent::__construct('Versio', self::$version);
+        $hash = '@git_commit_short@';
+        $hash = (strpos($hash, "@") === 0 ? '' : '+sha.' . $hash);
+
+        $version = Version::parse(self::$version . $hash);
+
+        parent::__construct('Versio', $version->format());
     }
 
     /**

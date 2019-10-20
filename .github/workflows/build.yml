@@ -1,0 +1,40 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install box
+      run: composer global require humbug/box
+
+    - name: Install dependencies
+      run: composer install --no-dev --optimize-autoloader --prefer-dist --no-progress --no-suggest
+
+    - name: Dump environment
+      run: composer dump-env prod
+
+    - name: Clear cache
+      run: php bin/console cache:clear --env=prod --no-debug
+
+    - name: Warmup cache
+      run: php bin/console cache:warmup --env=prod --no-debug
+
+    - name: Warmup class cache
+      run: ./bin/versio -q;
+
+    - name: Build
+      run: box build
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: PHAR
+        path: build/versio.phar

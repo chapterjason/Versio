@@ -1,9 +1,16 @@
 {
     "main": "bin/versio",
     "output": "build/versio.phar",
-    "compression": "GZ",
     "force-autodiscovery": true,
+    "compression": "GZ",
+    "check-requirements": false,
     "directories": [
-        "config"
-    ]
+        "config",
+        "var/cache/prod"
+    ],
+    "files": [
+        ".env.local.php",
+        "LICENSE"
+    ],
+    "git-commit-short": "git_commit_short"
 }
