@@ -80,7 +80,7 @@ This advanced configuration is some of the most advanced configurations you can 
 - [ ] More detailed error messages
 - [ ] Better command description and help texts
 - [ ] `init` command. Allows to init the versio in a git project or init a new git before.
-- [ ] `get` command. Displays the current version.
+- [x] `get` command. Displays the current version.
 - [ ] Commit message format
 - [ ] Free definable places
 - [ ] Command tests. Currently not that easy cause of the git interactions.
