@@ -16,6 +16,9 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Workflow\Workflow;
 use Versio\Configuration\VersioFileConfiguration;
 use Versio\Workflow\WorkflowGenerator;
+use function file_put_contents;
+use function getcwd;
+use function json_encode;
 
 class VersioFile
 {
@@ -122,6 +125,16 @@ class VersioFile
         }
 
         return $this->locatedFile;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function setData(array $data): void
+    {
+        $this->data = $data;
+        $encoded = json_encode($data, JSON_PRETTY_PRINT);
+        file_put_contents(getcwd() . '/' . $this->file, $encoded);
     }
 
     public function setVersion(Version $version): VersioFile

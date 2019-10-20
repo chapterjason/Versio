@@ -10,6 +10,7 @@ Versio helps you to create your releases.
 
 In every project you want to use Versio you have to create a `versio.json` file.
 This file contains the actual version and contains configurations about the release workflow.
+To create it automatically use the `init` command.
 
 Always ensure that you start with the master and end somewhere with the release.
 
@@ -86,7 +87,7 @@ This advanced configuration is some of the most advanced configurations you can 
 
 ### 0.1.0
 
-- [ ] `init` command. Allows to init the versio in a git project or init a new git before.
+- [x] `init` command. Allows to init the versio in a git project or init a new git before.
 - [x] `get` command. Displays the current version.
 - [ ] Updaters. This is the most needed feature, cause this will also change the versions in e.g. `composer.json`, `package.json` or in any file on any line.
 - [ ] Ensure that all branches are localy available. Currently its enough if you are `git fetch --all && git pull --all` before working with the command, or ensure that the master and all release branches localy available.

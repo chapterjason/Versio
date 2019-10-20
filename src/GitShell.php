@@ -143,6 +143,50 @@ class GitShell
     }
 
     /**
+     * @return bool
+     */
+    public function isRepository(): bool
+    {
+        $process = $this->execute(['git', 'tag']);
+
+        return $process->isSuccessful();
+    }
+
+    /**
+     * @return Process
+     * @throws ErrorException
+     */
+    public function initialize(): Process
+    {
+        $process = $this->execute(['git', 'init']);
+
+        if (!$process->isSuccessful()) {
+            // @todo
+            $this->throwException($process, 'Could not initialize repository.');
+        }
+
+        return $process;
+    }
+
+    /**
+     * @return bool
+     * @throws ErrorException
+     */
+    public function isClean(): bool
+    {
+        $process = $this->execute(['git', 'status', '--porcelain']);
+
+        if (!$process->isSuccessful()) {
+            // @todo
+            $this->throwException($process, 'Could not check repository status.');
+        }
+
+        $output = trim($process->getOutput());
+
+        return $output === '';
+    }
+
+    /**
      * @param string $tag
      * @return Process
      * @throws ErrorException
