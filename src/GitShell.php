@@ -143,6 +143,16 @@ class GitShell
     }
 
     /**
+     * @return bool
+     */
+    public function isRepository(): bool
+    {
+        $process = $this->execute(['git', 'tag']);
+
+        return $process->isSuccessful();
+    }
+
+    /**
      * @param string $tag
      * @return Process
      * @throws ErrorException
