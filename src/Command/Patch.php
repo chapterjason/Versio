@@ -34,7 +34,7 @@ class Patch extends AbstractVersionCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $version = $this->versioFile->getVersion();
+        $version = $this->getVersion();
 
         $currentBranch = $this->shell->currentBranch();
         if (!Utils::isReleaseBranch($currentBranch)) {

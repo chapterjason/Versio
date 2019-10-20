@@ -61,7 +61,7 @@ class Prerelease extends AbstractVersionCommand
         }
 
         $this->validateTransition($prereleaseType, $nextType);
-        $version = $this->versioFile->getVersion();
+        $version = $this->getVersion();
 
         // Prepare prerelease version
         $prereleaseVersion = Version::clone($version);
@@ -138,8 +138,8 @@ class Prerelease extends AbstractVersionCommand
             throw new ErrorException('Next prerelease "' . $next . '" is not configured.');
         }
 
-        $version = $this->versioFile->getVersion();
-        $workflow = $this->versioFile->getWorkflow();
+        $version = $this->getVersion();
+        $workflow = $this->getWorkflow();
         $definition = $workflow->getDefinition();
         $transitions = array_map(
             static function (Transition $item) {

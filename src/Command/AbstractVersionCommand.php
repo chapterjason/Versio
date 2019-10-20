@@ -16,8 +16,10 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Workflow\Workflow;
 use Versio\GitShell;
 use Versio\Version\VersioFile;
+use Versio\Version\VersioFileManager;
 use Versio\Version\Version;
 use Versio\Version\VersionManager;
 use function strtoupper;
@@ -26,30 +28,33 @@ abstract class AbstractVersionCommand extends Command
 {
 
     /**
-     * @var VersioFile $versioFile
+     * @var VersioFileManager $versioFileManager
      */
-    protected $versioFile;
+    protected $versioFileManager;
 
     /**
      * @var VersionManager $versionManager
      */
     protected $versionManager;
-
     /**
      * @var GitShell $shell
      */
     protected $shell;
+    /**
+     * @var VersioFile $versioFile
+     */
+    private $versioFile;
 
     /**
      * Alpha constructor.
      * @param GitShell $shell
      * @param VersionManager $versionManager
-     * @param VersioFile $versioFile
+     * @param VersioFileManager $versioFileManager
      */
-    public function __construct(GitShell $shell, VersionManager $versionManager, VersioFile $versioFile)
+    public function __construct(GitShell $shell, VersionManager $versionManager, VersioFileManager $versioFileManager)
     {
         $this->versionManager = $versionManager;
-        $this->versioFile = $versioFile;
+        $this->versioFileManager = $versioFileManager;
         $this->shell = $shell;
         parent::__construct();
     }
@@ -61,7 +66,7 @@ abstract class AbstractVersionCommand extends Command
 
     protected function getType()
     {
-        $version = $this->versioFile->getVersion();
+        $version = $this->getVersioFile()->getVersion();
 
         if ($version->getPatch() >= 1) {
             return 'RELEASE';
@@ -70,13 +75,22 @@ abstract class AbstractVersionCommand extends Command
         return $this->versionManager->getType($version) ?? 'MASTER';
     }
 
+    protected function getVersioFile()
+    {
+        if (!$this->versioFile) {
+            $this->versioFile = $this->versioFileManager->get();
+        }
+
+        return $this->versioFile;
+    }
+
     /**
      * @return array
      * @throws ErrorException
      */
     protected function getPlaces(): array
     {
-        $workflow = $this->versioFile->getWorkflow();
+        $workflow = $this->getWorkflow();
         $definition = $workflow->getDefinition();
         $places = array_map(
             static function ($item) {
@@ -94,11 +108,32 @@ abstract class AbstractVersionCommand extends Command
     }
 
     /**
+     * @return Workflow
+     * @throws ErrorException
+     */
+    protected function getWorkflow(): Workflow
+    {
+        $versioFile = $this->getVersioFile();
+
+        return $this->versioFileManager->getWorkflow($versioFile);
+    }
+
+    /**
+     * @return Version
+     */
+    protected function getVersion(): Version
+    {
+        $versioFile = $this->getVersioFile();
+
+        return $versioFile->getVersion();
+    }
+
+    /**
      * @return bool
      */
     protected function isMaster(): bool
     {
-        $version = $this->versioFile->getVersion();
+        $version = $this->getVersioFile()->getVersion();
         $branch = $this->shell->currentBranch();
 
         return 'master' === $branch &&
@@ -154,7 +189,8 @@ abstract class AbstractVersionCommand extends Command
     protected function bump(Version $masterBranchVersion): void
     {
         $this->versioFile->setVersion($masterBranchVersion);
-        $this->versioFile->save();
+        $this->versioFileManager->set($this->versioFile);
+        $this->versioFileManager->save();
 
         $this->shell->trackAll();
         $this->shell->commit('Bump version to ' . $masterBranchVersion->format());
@@ -192,7 +228,8 @@ abstract class AbstractVersionCommand extends Command
     protected function release(Version $version): void
     {
         $this->versioFile->setVersion($version);
-        $this->versioFile->save();
+        $this->versioFileManager->set($this->versioFile);
+        $this->versioFileManager->save();
 
         $this->shell->trackAll();
         $this->shell->commit('Update version for ' . $version->format());

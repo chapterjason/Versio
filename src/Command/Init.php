@@ -13,6 +13,7 @@ namespace Versio\Command;
 use ErrorException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Versio\Version\VersioFile;
 
 class Init extends AbstractVersionCommand
 {
@@ -43,7 +44,9 @@ class Init extends AbstractVersionCommand
         }
 
         $configuration = $this->getBasicConfiguration();
-        $this->versioFile->setData($configuration);
+        $versioFile = new VersioFile($configuration);
+        $this->versioFileManager->set($versioFile);
+        $this->versioFileManager->save();
 
         $this->shell->trackAll();
         $this->shell->commit('Add versio file');

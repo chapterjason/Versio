@@ -30,8 +30,8 @@ class Get extends AbstractVersionCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $version = $this->versioFile->getVersion();
-        $output->writeln($version);
+        $version = $this->getVersion();
+        $output->writeln($version->format());
     }
 
 }

@@ -16,7 +16,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Versio\Utils;
 use Versio\Version\Version;
-use function strtolower;
 
 class Release extends AbstractVersionCommand
 {
@@ -41,7 +40,7 @@ class Release extends AbstractVersionCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $version = $this->versioFile->getVersion();
+        $version = $this->getVersion();
 
         if ($this->isMaster()) {
             $masterType = strtolower($this->getMasterType($input, $output));
@@ -97,8 +96,8 @@ class Release extends AbstractVersionCommand
      */
     private function validateMasterBranchRelease(): void
     {
-        $version = $this->versioFile->getVersion();
-        $workflow = $this->versioFile->getWorkflow();
+        $version = $this->getVersion();
+        $workflow = $this->getWorkflow();
         $type = $this->getType();
         $transition = $this->getTransition($type, 'release');
 
@@ -114,8 +113,8 @@ class Release extends AbstractVersionCommand
      */
     private function validateReleaseBranchRelease(string $currentBranch): void
     {
-        $version = $this->versioFile->getVersion();
-        $workflow = $this->versioFile->getWorkflow();
+        $version = $this->getVersion();
+        $workflow = $this->getWorkflow();
 
         if (!Utils::isReleaseBranch($currentBranch)) {
             // @todo
