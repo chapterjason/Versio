@@ -1,5 +1,5 @@
 {
-    "type": "project",
+    "type": "library",
     "license": "proprietary",
     "name": "sourecode/versio",
     "description": "Release helper util for your project.",
