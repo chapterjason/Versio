@@ -162,11 +162,7 @@ class GitShell
 
         if (!$process->isSuccessful()) {
             // @todo
-            throw new ErrorException(
-                'Could not initialize repository.',
-                0,
-                new ErrorException($process->getErrorOutput())
-            );
+            $this->throwException($process, 'Could not initialize repository.');
         }
 
         return $process;
@@ -178,15 +174,11 @@ class GitShell
      */
     public function isClean(): bool
     {
-        $process = $this->execute(["git", "status", "--porcelain"]);
+        $process = $this->execute(['git', 'status', '--porcelain']);
 
         if (!$process->isSuccessful()) {
             // @todo
-            throw new ErrorException(
-                'Could not check repository status.',
-                0,
-                new ErrorException($process->getErrorOutput())
-            );
+            $this->throwException($process, 'Could not check repository status.');
         }
 
         $output = trim($process->getOutput());
