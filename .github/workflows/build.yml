@@ -4,37 +4,41 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-18.04
-
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: '7.3'
+          extension-csv: intl
 
-    - name: Install box
-      run: wget https://github.com/humbug/box/releases/download/3.8.1/box.phar
+      - name: Validate composer.json and composer.lock
+        run: composer validate
 
-    - name: Install dependencies
-      run: composer install --no-dev --optimize-autoloader --prefer-dist --no-progress --no-suggest
+      - name: Install box
+        run: wget https://github.com/humbug/box/releases/download/3.8.1/box.phar
 
-    - name: Dump environment
-      run: composer dump-env prod
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader --prefer-dist --no-progress --no-suggest
 
-    - name: Clear cache
-      run: php bin/console cache:clear --env=prod --no-debug
+      - name: Dump environment
+        run: composer dump-env prod
 
-    - name: Warmup cache
-      run: php bin/console cache:warmup --env=prod --no-debug
+      - name: Clear cache
+        run: php bin/console cache:clear --env=prod --no-debug
 
-    - name: Warmup class cache
-      run: ./bin/versio -q;
+      - name: Warmup cache
+        run: php bin/console cache:warmup --env=prod --no-debug
 
-    - name: Build
-      run: php box.phar build
+      - name: Warmup class cache
+        run: ./bin/versio -q;
 
-    - uses: actions/upload-artifact@master
-      with:
-        name: PHAR
-        path: build/versio.phar
+      - name: Build
+        run: php box.phar build
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: PHAR
+          path: build/versio.phar
