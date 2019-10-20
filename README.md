@@ -6,6 +6,15 @@ There comes Versio into the game.
 
 Versio helps you to create your releases.
 
+## Installation
+
+Download the latest phar and install it with:
+
+```shell script
+sudo mv versio.phar /usr/local/bin/versio
+sudo chmod +x /usr/local/bin/versio
+```
+
 ## Configuration
 
 In every project you want to use Versio you have to create a `versio.json` file.
