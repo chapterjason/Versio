@@ -55,7 +55,7 @@ class Prerelease extends AbstractVersionCommand
         $places = $this->getPlaces();
 
         if (count($places) <= 0) {
-            throw new ErrorException("Can not release prerelease if there are no places configured.");
+            throw new ErrorException('Can not release prerelease if there are no places configured.');
         }
 
         $type = $input->getArgument('type');
@@ -67,7 +67,7 @@ class Prerelease extends AbstractVersionCommand
                 'Please select the prerelease version you want to release',
                 $places
             );
-            $question->setErrorMessage('Prerelease version %s is invalid.');
+            $question->setErrorMessage('Prerelease version "%s" is invalid.');
 
             $type = $helper->ask($input, $output, $question);
             $input->setArgument('type', $type);
@@ -79,7 +79,7 @@ class Prerelease extends AbstractVersionCommand
                 'Please select the prerelease version you want to release next',
                 $places
             );
-            $question->setErrorMessage('Next prerelease version %s is invalid.');
+            $question->setErrorMessage('Next prerelease version "%s" is invalid.');
 
             $next = $helper->ask($input, $output, $question);
             $input->setArgument('next', $next);

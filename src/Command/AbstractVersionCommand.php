@@ -251,10 +251,10 @@ abstract class AbstractVersionCommand extends Command
             if (null === $masterType) {
                 $helper = $this->getHelper('question');
                 $question = new ChoiceQuestion(
-                    'Please select the next major verison',
+                    'Please select the next master version',
                     ['minor', 'major']
                 );
-                $question->setErrorMessage('Next major version %s is invalid.');
+                $question->setErrorMessage('Next master version "%s" is invalid.');
 
                 $masterType = $helper->ask($input, $output, $question);
             }
