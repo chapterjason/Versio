@@ -27,11 +27,7 @@ class GitShell
 
         if (!$process->isSuccessful()) {
             // @todo
-            throw new ErrorException(
-                'Could not checkout branch "' . $branch . '".',
-                0,
-                new ErrorException($process->getErrorOutput())
-            );
+            $this->throwException($process, 'Could not checkout branch "' . $branch . '".');
         }
 
         return $process;
@@ -50,6 +46,20 @@ class GitShell
     }
 
     /**
+     * @param Process $process
+     * @param string $message
+     * @throws ErrorException
+     */
+    private function throwException(Process $process, string $message): void
+    {
+        throw new ErrorException(
+            $message,
+            0, 1, __FILE__, __LINE__,
+            new ErrorException($process->getErrorOutput())
+        );
+    }
+
+    /**
      * @return Process
      * @throws ErrorException
      */
@@ -59,7 +69,7 @@ class GitShell
 
         if (!$process->isSuccessful()) {
             // @todo
-            throw new ErrorException('Could not track all changes', 0, new ErrorException($process->getErrorOutput()));
+            $this->throwException($process, 'Could not track all changes');
         }
 
         return $process;
@@ -76,7 +86,7 @@ class GitShell
 
         if (!$process->isSuccessful()) {
             // @todo
-            throw new ErrorException('Could not create commit.', 0, new ErrorException($process->getErrorOutput()));
+            $this->throwException($process, 'Could not create commit.');
         }
 
         return $process;
@@ -100,9 +110,7 @@ class GitShell
 
         if (!$process->isSuccessful()) {
             // @todo
-            throw new ErrorException(
-                'Could not retrieve branches."', 0, new ErrorException($process->getErrorOutput())
-            );
+            $this->throwException($process, 'Could not retrieve branches.');
         }
 
         $branches = preg_split("/\r?\n/", trim($process->getOutput()));
@@ -128,11 +136,7 @@ class GitShell
 
         if (!$process->isSuccessful()) {
             // @todo
-            throw new ErrorException(
-                'Could not create branch "' . $branch . '".',
-                0,
-                new ErrorException($process->getErrorOutput())
-            );
+            $this->throwException($process, 'Could not create branch "' . $branch . '".');
         }
 
         return $process;
@@ -149,11 +153,7 @@ class GitShell
 
         if (!$process->isSuccessful()) {
             // @todo
-            throw new ErrorException(
-                'Could not create tag "' . $tag . '".',
-                0,
-                new ErrorException($process->getErrorOutput())
-            );
+            $this->throwException($process, 'Could not create tag "' . $tag . '".');
         }
 
         return $process;
