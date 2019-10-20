@@ -173,6 +173,28 @@ class GitShell
     }
 
     /**
+     * @return bool
+     * @throws ErrorException
+     */
+    public function isClean(): bool
+    {
+        $process = $this->execute(["git", "status", "--porcelain"]);
+
+        if (!$process->isSuccessful()) {
+            // @todo
+            throw new ErrorException(
+                'Could not check repository status.',
+                0,
+                new ErrorException($process->getErrorOutput())
+            );
+        }
+
+        $output = trim($process->getOutput());
+
+        return $output === '';
+    }
+
+    /**
      * @param string $tag
      * @return Process
      * @throws ErrorException
