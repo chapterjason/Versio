@@ -10,6 +10,7 @@
 
 namespace Versio\Strategy;
 
+use ErrorException;
 use Versio\Version\VersioFile;
 use Versio\Version\Version;
 
@@ -30,6 +31,11 @@ class StrategyManager
         $this->resolver = $resolver;
     }
 
+    /**
+     * @param VersioFile $versioFile
+     * @param Version $version
+     * @throws ErrorException
+     */
     public function update(VersioFile $versioFile, Version $version)
     {
         $strategies = $this->resolver->resolve($versioFile);

@@ -75,6 +75,10 @@ abstract class AbstractVersionCommand extends Command
         return strtoupper($from) . '_' . strtoupper($to);
     }
 
+    /**
+     * @return string|null
+     * @throws ErrorException
+     */
     protected function getType()
     {
         $version = $this->getVersioFile()->getVersion();
@@ -86,6 +90,10 @@ abstract class AbstractVersionCommand extends Command
         return $this->versionManager->getType($version) ?? 'MASTER';
     }
 
+    /**
+     * @return VersioFile
+     * @throws ErrorException
+     */
     protected function getVersioFile(): VersioFile
     {
         if (!$this->versioFile) {
@@ -131,6 +139,7 @@ abstract class AbstractVersionCommand extends Command
 
     /**
      * @return Version
+     * @throws ErrorException
      */
     protected function getVersion(): Version
     {
@@ -229,6 +238,11 @@ abstract class AbstractVersionCommand extends Command
         $this->shell->createTag('v' . $version->format());
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @throws ErrorException
+     */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         if ($this->getDefinition()->hasArgument('master') && $this->isMaster()) {
@@ -255,6 +269,7 @@ abstract class AbstractVersionCommand extends Command
 
     /**
      * @return bool
+     * @throws ErrorException
      */
     protected function isMaster(): bool
     {

@@ -64,6 +64,10 @@ class VersioFileManager
             $file = $this->getFile();
         }
 
+        if (!$this->exists($file)) {
+            throw new ErrorException('Missing versio file.');
+        }
+
         $data = file_get_contents($file);
         $decoded = json_decode($data, true);
 
