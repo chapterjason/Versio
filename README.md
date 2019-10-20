@@ -10,6 +10,7 @@ Versio helps you to create your releases.
 
 In every project you want to use Versio you have to create a `versio.json` file.
 This file contains the actual version and contains configurations about the release workflow.
+To create it automatically use the `init` command.
 
 Always ensure that you start with the master and end somewhere with the release.
 
