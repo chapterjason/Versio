@@ -14,9 +14,12 @@ use ErrorException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Workflow\Transition;
 use Versio\Utils;
 use Versio\Version\Version;
+use function array_values;
+use function count;
 
 class Prerelease extends AbstractVersionCommand
 {
@@ -43,6 +46,51 @@ class Prerelease extends AbstractVersionCommand
                 'Next version on master'
             );
     }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @throws ErrorException
+     */
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        $places = $this->getPlaces();
+
+        if (count($places) <= 0) {
+            throw new ErrorException("Can not release prerelease if there are no places configured.");
+        }
+
+        $type = $input->getArgument('type');
+        $next = $input->getArgument('next');
+
+        if (null === $type) {
+            $helper = $this->getHelper('question');
+            $question = new ChoiceQuestion(
+                'Please select the prerelease version you want to release',
+                $places
+            );
+            $question->setErrorMessage('Prerelease version %s is invalid.');
+
+            $type = $helper->ask($input, $output, $question);
+            $input->setArgument('type', $type);
+        }
+
+        if (null === $next) {
+            $helper = $this->getHelper('question');
+            $question = new ChoiceQuestion(
+                'Please select the prerelease version you want to release next',
+                $places
+            );
+            $question->setErrorMessage('Next prerelease version %s is invalid.');
+
+            $next = $helper->ask($input, $output, $question);
+            $input->setArgument('next', $next);
+        }
+
+
+        parent::interact($input, $output);
+    }
+
 
     /**
      * @param InputInterface $input
@@ -82,7 +130,7 @@ class Prerelease extends AbstractVersionCommand
         }
 
         if ($this->isMaster()) {
-            $masterType = strtolower($this->getMasterType($input, $output));
+            $masterType = strtolower($input->getArgument('master'));
             $this->validateMaster($masterType);
             $releaseBranchName = 'release/' . $version->getMajor() . '.' . $version->getMinor();
 

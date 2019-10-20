@@ -43,7 +43,7 @@ class Release extends AbstractVersionCommand
         $version = $this->getVersion();
 
         if ($this->isMaster()) {
-            $masterType = strtolower($this->getMasterType($input, $output));
+            $masterType = strtolower($input->getArgument('master'));
             $this->validateMasterBranchRelease();
             $this->validateMaster($masterType);
 

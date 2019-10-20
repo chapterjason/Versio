@@ -13,6 +13,7 @@ namespace Versio\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Versio\Version\Version;
 
 class Set extends AbstractVersionCommand
@@ -27,6 +28,25 @@ class Set extends AbstractVersionCommand
             ->addArgument('value', InputArgument::REQUIRED, 'Version to set');
     }
 
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        $value = $input->getArgument('value');
+
+        if (null === $value) {
+            $helper = $this->getHelper('question');
+            $question = new Question('Version: ');
+
+            $question->setValidator(
+                static function ($answer) {
+                return Version::parse($answer);
+            });
+
+            $value = $helper->ask($input, $output, $question);
+            $input->setArgument('value', $value);
+        }
+    }
+
+
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
@@ -37,8 +57,9 @@ class Set extends AbstractVersionCommand
         $value = $input->getArgument('value');
         $inputVersion = Version::Parse($value);
 
-        $this->versioFile->setVersion($inputVersion);
-        $this->versioFile->save();
+        $versioFile = $this->getVersioFile();
+        $versioFile->setVersion($inputVersion);
+        $this->versioFileManager->save($versioFile);
     }
 
 }

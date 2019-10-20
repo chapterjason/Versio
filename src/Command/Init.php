@@ -45,8 +45,7 @@ class Init extends AbstractVersionCommand
 
         $configuration = $this->getBasicConfiguration();
         $versioFile = new VersioFile($configuration);
-        $this->versioFileManager->set($versioFile);
-        $this->versioFileManager->save();
+        $this->versioFileManager->save($versioFile);
 
         $this->shell->trackAll();
         $this->shell->commit('Add versio file');

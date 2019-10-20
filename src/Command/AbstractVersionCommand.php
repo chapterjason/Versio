@@ -22,6 +22,7 @@ use Versio\Version\VersioFile;
 use Versio\Version\VersioFileManager;
 use Versio\Version\Version;
 use Versio\Version\VersionManager;
+use function array_values;
 use function strtoupper;
 
 abstract class AbstractVersionCommand extends Command
@@ -75,17 +76,17 @@ abstract class AbstractVersionCommand extends Command
         return $this->versionManager->getType($version) ?? 'MASTER';
     }
 
-    protected function getVersioFile()
+    protected function getVersioFile(): VersioFile
     {
         if (!$this->versioFile) {
-            $this->versioFile = $this->versioFileManager->get();
+            $this->versioFile = $this->versioFileManager->load();
         }
 
         return $this->versioFile;
     }
 
     /**
-     * @return array
+     * @return string[]
      * @throws ErrorException
      */
     protected function getPlaces(): array
@@ -104,7 +105,7 @@ abstract class AbstractVersionCommand extends Command
             )
         );
 
-        return $places;
+        return array_values($places);
     }
 
     /**
@@ -189,8 +190,7 @@ abstract class AbstractVersionCommand extends Command
     protected function bump(Version $masterBranchVersion): void
     {
         $this->versioFile->setVersion($masterBranchVersion);
-        $this->versioFileManager->set($this->versioFile);
-        $this->versioFileManager->save();
+        $this->versioFileManager->save($this->versioFile);
 
         $this->shell->trackAll();
         $this->shell->commit('Bump version to ' . $masterBranchVersion->format());
@@ -228,40 +228,37 @@ abstract class AbstractVersionCommand extends Command
     protected function release(Version $version): void
     {
         $this->versioFile->setVersion($version);
-        $this->versioFileManager->set($this->versioFile);
-        $this->versioFileManager->save();
+        $this->versioFileManager->save($this->versioFile);
 
         $this->shell->trackAll();
         $this->shell->commit('Update version for ' . $version->format());
         $this->shell->createTag('v' . $version->format());
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return mixed|string|string[]|null
-     */
-    protected function getMasterType(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $masterType = $input->getArgument('master');
+        if($this->getDefinition()->hasArgument('master')) {
+            if ($this->isMaster()) {
+                $masterType = $input->getArgument('master');
 
-        if (null === $masterType) {
-            $helper = $this->getHelper('question');
-            $question = new ChoiceQuestion(
-                'Please select the next major verison',
-                ['minor', 'major']
-            );
-            $question->setErrorMessage('Next major version %s is invalid.');
+                if (null === $masterType) {
+                    $helper = $this->getHelper('question');
+                    $question = new ChoiceQuestion(
+                        'Please select the next major verison',
+                        ['minor', 'major']
+                    );
+                    $question->setErrorMessage('Next major version %s is invalid.');
 
-            $masterType = $helper->ask($input, $output, $question);
+                    $masterType = $helper->ask($input, $output, $question);
+                }
+
+                if (null === $masterType) {
+                    throw new \InvalidArgumentException('Missing parameter "master"');
+                }
+
+                $input->setArgument('master', $masterType);
+            }
         }
-
-        if (null === $masterType) {
-            throw new InvalidArgumentException('Missing parameter "master"');
-        }
-
-        return $masterType;
     }
-
 
 }
