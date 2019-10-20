@@ -17,6 +17,7 @@ use Symfony\Component\Workflow\Workflow;
 use Versio\Configuration\VersioFileConfiguration;
 use Versio\Workflow\WorkflowGenerator;
 use function file_put_contents;
+use function getcwd;
 use function json_encode;
 
 class VersioFile
@@ -133,7 +134,7 @@ class VersioFile
     {
         $this->data = $data;
         $encoded = json_encode($data);
-        file_put_contents(__DIR__ . "/" . $this->file, $encoded);
+        file_put_contents(getcwd() . '/' . $this->file, $encoded);
     }
 
     public function setVersion(Version $version): VersioFile
