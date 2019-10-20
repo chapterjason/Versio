@@ -98,5 +98,5 @@ This advanced configuration is some of the most advanced configurations you can 
 
 - [x] `init` command. Allows to init the versio in a git project or init a new git before.
 - [x] `get` command. Displays the current version.
-- [ ] Updaters. This is the most needed feature, cause this will also change the versions in e.g. `composer.json`, `package.json` or in any file on any line.
+- [ ] Strategies. This is the most needed feature, cause this will also change the versions in e.g. `composer.json`, `package.json` or in any file on any line.
 - [ ] Ensure that all branches are localy available. Currently its enough if you are `git fetch --all && git pull --all` before working with the command, or ensure that the master and all release branches localy available.
