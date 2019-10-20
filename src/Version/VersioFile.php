@@ -133,7 +133,7 @@ class VersioFile
     public function setData(array $data): void
     {
         $this->data = $data;
-        $encoded = json_encode($data);
+        $encoded = json_encode($data, JSON_PRETTY_PRINT);
         file_put_contents(getcwd() . '/' . $this->file, $encoded);
     }
 
