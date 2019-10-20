@@ -55,11 +55,8 @@ class Set extends AbstractVersionCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $value = $input->getArgument('value');
-        $inputVersion = Version::Parse($value);
-
-        $versioFile = $this->getVersioFile();
-        $versioFile->setVersion($inputVersion);
-        $this->versioFileManager->save($versioFile);
+        $version = Version::Parse($value);
+        $this->strategyManager->update($this->getVersioFile(), $version);
     }
 
 }

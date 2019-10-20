@@ -31,6 +31,7 @@ class VersioFileConfiguration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
 
         $this->addVersionSection($rootNode);
+        $this->addStrategySection($rootNode);
         $this->addWorkflowSection($rootNode);
 
         return $treeBuilder;
@@ -60,6 +61,27 @@ class VersioFileConfiguration implements ConfigurationInterface
                         ->thenInvalid('Invalid version.')
                     ->end()
                 ->end() // version
+            ->end();
+        // @formatter:on
+    }
+
+    private function addStrategySection(ArrayNodeDefinition $rootNode)
+    {
+        // @formatter:off
+        $rootNode
+            ->children()
+                ->arrayNode('strategies')
+                    ->arrayPrototype()
+                        ->children()
+                            ->enumNode('type')
+                                ->isRequired()
+                                ->cannotBeEmpty()
+                                ->values(['versio', 'composer'])
+                            ->end()
+                            ->arrayNode('options')->end()
+                        ->end()
+                    ->end()
+                ->end() // strategies
             ->end();
         // @formatter:on
     }

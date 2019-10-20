@@ -40,11 +40,15 @@ class VersioFileManager
         $this->filesystem = new Filesystem();
     }
 
-    public function save(VersioFile $versioFile): VersioFileManager
+    public function save(VersioFile $versioFile, string $file = null): VersioFileManager
     {
+        if (null === $file) {
+            $file = $this->getFile();
+        }
+
         $configuration = $versioFile->getConfiguration();
         $encoded = json_encode($configuration, JSON_PRETTY_PRINT);
-        $this->filesystem->dumpFile($this->getFile(), $encoded);
+        $this->filesystem->dumpFile($file, $encoded);
 
         return $this;
     }
@@ -54,9 +58,13 @@ class VersioFileManager
         return getcwd() . '/versio.json';
     }
 
-    public function load(): VersioFile
+    public function load(string $file = null): VersioFile
     {
-        $data = file_get_contents($this->getFile());
+        if (null === $file) {
+            $file = $this->getFile();
+        }
+
+        $data = file_get_contents($file);
         $decoded = json_decode($data, true);
 
         $configuration = new VersioFileConfiguration();
@@ -67,9 +75,13 @@ class VersioFileManager
         return new VersioFile($configuration);
     }
 
-    public function exists(): bool
+    public function exists(string $file = null): bool
     {
-        return $this->filesystem->exists($this->getFile());
+        if (null === $file) {
+            $file = $this->getFile();
+        }
+
+        return $this->filesystem->exists($file);
     }
 
     /**

@@ -18,8 +18,6 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Workflow\Transition;
 use Versio\Utils;
 use Versio\Version\Version;
-use function array_values;
-use function count;
 
 class Prerelease extends AbstractVersionCommand
 {
