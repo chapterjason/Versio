@@ -79,11 +79,14 @@ This advanced configuration is some of the most advanced configurations you can 
 - [ ] Custom exceptions
 - [ ] More detailed error messages
 - [ ] Better command description and help texts
-- [ ] `init` command. Allows to init the versio in a git project or init a new git before.
-- [x] `get` command. Displays the current version.
 - [ ] Commit message format
 - [ ] Free definable places
 - [ ] Command tests. Currently not that easy cause of the git interactions.
 - [ ] Better git interactions
-- [ ] Ensure that all branches are localy available. Currently its enough if you are `git fetch --all && git pull --all` before working with the command, or ensure that the master and all release branches localy available.
+
+### 0.1.0
+
+- [ ] `init` command. Allows to init the versio in a git project or init a new git before.
+- [x] `get` command. Displays the current version.
 - [ ] Updaters. This is the most needed feature, cause this will also change the versions in e.g. `composer.json`, `package.json` or in any file on any line.
+- [ ] Ensure that all branches are localy available. Currently its enough if you are `git fetch --all && git pull --all` before working with the command, or ensure that the master and all release branches localy available.
