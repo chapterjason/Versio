@@ -2,6 +2,7 @@
     "type": "project",
     "license": "proprietary",
     "name": "sourecode/versio",
+    "description": "Release helper util for your project.",
     "require": {
         "php": "^7.1.3",
         "ext-ctype": "*",
