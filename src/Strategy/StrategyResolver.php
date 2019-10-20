@@ -10,7 +10,7 @@
 
 namespace Versio\Strategy;
 
-
+use ErrorException;
 use Versio\Version\VersioFile;
 
 class StrategyResolver
@@ -33,6 +33,7 @@ class StrategyResolver
     /**
      * @param VersioFile $versioFile
      * @return StrategyInterface[]
+     * @throws ErrorException
      */
     public function resolve(VersioFile $versioFile): array
     {

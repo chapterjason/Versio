@@ -12,24 +12,23 @@ namespace Versio\Strategy;
 
 
 use ErrorException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Versio\Version\VersioFileManager;
 
 class StrategyFactory
 {
 
     /**
-     * @var ContainerInterface $container
+     * @var VersioFileManager $versioFileManager
      */
-    protected $container;
+    protected $versioFileManager;
 
     /**
      * StrategyFactory constructor.
-     * @param ContainerInterface $container
+     * @param VersioFileManager $versioFileManager
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(VersioFileManager $versioFileManager)
     {
-        $this->container = $container;
+        $this->versioFileManager = $versioFileManager;
     }
 
     /**
@@ -43,7 +42,7 @@ class StrategyFactory
         $strategy = null;
 
         if ($type === 'versio') {
-            $strategy = new VersioStrategy($this->container->get(VersioFileManager::class));
+            $strategy = new VersioStrategy($this->versioFileManager);
         } else if ($type === 'composer') {
             $strategy = new ComposerStrategy();
         }

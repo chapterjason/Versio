@@ -16,6 +16,3 @@ services:
     Versio\:
         resource: '../src/*'
         exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-
-    Versio\Version\VersioFileManager:
-        public: true
