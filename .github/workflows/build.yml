@@ -14,7 +14,7 @@ jobs:
       run: composer validate
 
     - name: Install box
-      run: composer global require humbug/box
+      run: wget https://github.com/humbug/box/releases/download/3.8.1/box.phar
 
     - name: Install dependencies
       run: composer install --no-dev --optimize-autoloader --prefer-dist --no-progress --no-suggest
@@ -32,7 +32,7 @@ jobs:
       run: ./bin/versio -q;
 
     - name: Build
-      run: box build
+      run: php box.phar build
 
     - uses: actions/upload-artifact@master
       with:
