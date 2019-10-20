@@ -11,22 +11,26 @@
 namespace Versio\Command;
 
 use ErrorException;
+use InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Workflow\Workflow;
 use Versio\GitShell;
+use Versio\Strategy\StrategyManager;
 use Versio\Version\VersioFile;
 use Versio\Version\VersioFileManager;
 use Versio\Version\Version;
 use Versio\Version\VersionManager;
-use function array_values;
-use function strtoupper;
 
 abstract class AbstractVersionCommand extends Command
 {
+
+    /**
+     * @var StrategyManager $strategyManager
+     */
+    protected $strategyManager;
 
     /**
      * @var VersioFileManager $versioFileManager
@@ -51,12 +55,18 @@ abstract class AbstractVersionCommand extends Command
      * @param GitShell $shell
      * @param VersionManager $versionManager
      * @param VersioFileManager $versioFileManager
+     * @param StrategyManager $strategyManager
      */
-    public function __construct(GitShell $shell, VersionManager $versionManager, VersioFileManager $versioFileManager)
-    {
+    public function __construct(
+        GitShell $shell,
+        VersionManager $versionManager,
+        VersioFileManager $versioFileManager,
+        StrategyManager $strategyManager
+    ) {
+        $this->shell = $shell;
         $this->versionManager = $versionManager;
         $this->versioFileManager = $versioFileManager;
-        $this->shell = $shell;
+        $this->strategyManager = $strategyManager;
         parent::__construct();
     }
 
@@ -65,6 +75,10 @@ abstract class AbstractVersionCommand extends Command
         return strtoupper($from) . '_' . strtoupper($to);
     }
 
+    /**
+     * @return string|null
+     * @throws ErrorException
+     */
     protected function getType()
     {
         $version = $this->getVersioFile()->getVersion();
@@ -76,6 +90,10 @@ abstract class AbstractVersionCommand extends Command
         return $this->versionManager->getType($version) ?? 'MASTER';
     }
 
+    /**
+     * @return VersioFile
+     * @throws ErrorException
+     */
     protected function getVersioFile(): VersioFile
     {
         if (!$this->versioFile) {
@@ -121,26 +139,13 @@ abstract class AbstractVersionCommand extends Command
 
     /**
      * @return Version
+     * @throws ErrorException
      */
     protected function getVersion(): Version
     {
         $versioFile = $this->getVersioFile();
 
         return $versioFile->getVersion();
-    }
-
-    /**
-     * @return bool
-     */
-    protected function isMaster(): bool
-    {
-        $version = $this->getVersioFile()->getVersion();
-        $branch = $this->shell->currentBranch();
-
-        return 'master' === $branch &&
-            null === $this->versionManager->getType($version) &&
-            $this->versionManager->isDev($version) &&
-            0 === $version->getPatch();
     }
 
     /**
@@ -184,16 +189,15 @@ abstract class AbstractVersionCommand extends Command
     }
 
     /**
-     * @param Version $masterBranchVersion
+     * @param Version $version
      * @throws ErrorException
      */
-    protected function bump(Version $masterBranchVersion): void
+    protected function bump(Version $version): void
     {
-        $this->versioFile->setVersion($masterBranchVersion);
-        $this->versioFileManager->save($this->versioFile);
+        $this->strategyManager->update($this->getVersioFile(), $version);
 
         $this->shell->trackAll();
-        $this->shell->commit('Bump version to ' . $masterBranchVersion->format());
+        $this->shell->commit('Bump version to ' . $version->format());
     }
 
     /**
@@ -227,38 +231,55 @@ abstract class AbstractVersionCommand extends Command
      */
     protected function release(Version $version): void
     {
-        $this->versioFile->setVersion($version);
-        $this->versioFileManager->save($this->versioFile);
+        $this->strategyManager->update($this->getVersioFile(), $version);
 
         $this->shell->trackAll();
         $this->shell->commit('Update version for ' . $version->format());
         $this->shell->createTag('v' . $version->format());
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @throws ErrorException
+     */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        if($this->getDefinition()->hasArgument('master')) {
-            if ($this->isMaster()) {
-                $masterType = $input->getArgument('master');
+        if ($this->getDefinition()->hasArgument('master') && $this->isMaster()) {
+            $masterType = $input->getArgument('master');
 
-                if (null === $masterType) {
-                    $helper = $this->getHelper('question');
-                    $question = new ChoiceQuestion(
-                        'Please select the next major verison',
-                        ['minor', 'major']
-                    );
-                    $question->setErrorMessage('Next major version %s is invalid.');
+            if (null === $masterType) {
+                $helper = $this->getHelper('question');
+                $question = new ChoiceQuestion(
+                    'Please select the next master version',
+                    ['minor', 'major']
+                );
+                $question->setErrorMessage('Next master version "%s" is invalid.');
 
-                    $masterType = $helper->ask($input, $output, $question);
-                }
-
-                if (null === $masterType) {
-                    throw new \InvalidArgumentException('Missing parameter "master"');
-                }
-
-                $input->setArgument('master', $masterType);
+                $masterType = $helper->ask($input, $output, $question);
             }
+
+            if (null === $masterType) {
+                throw new InvalidArgumentException('Missing parameter "master"');
+            }
+
+            $input->setArgument('master', $masterType);
         }
+    }
+
+    /**
+     * @return bool
+     * @throws ErrorException
+     */
+    protected function isMaster(): bool
+    {
+        $version = $this->getVersioFile()->getVersion();
+        $branch = $this->shell->currentBranch();
+
+        return 'master' === $branch &&
+            null === $this->versionManager->getType($version) &&
+            $this->versionManager->isDev($version) &&
+            0 === $version->getPatch();
     }
 
 }

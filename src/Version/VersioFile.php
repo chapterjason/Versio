@@ -37,6 +37,23 @@ class VersioFile
         return $this->configuration;
     }
 
+    public function getStrategies(): array
+    {
+        $strategies = [
+            [
+                'type' => 'versio',
+            ],
+        ];
+
+        $configuredStrategies = $this->configuration['strategies'];
+
+        if (null !== $configuredStrategies) {
+            $strategies = array_merge($strategies, $configuredStrategies);
+        }
+
+        return $strategies;
+    }
+
     public function setVersion(Version $version): VersioFile
     {
         $this->configuration['version'] = $version->format();
