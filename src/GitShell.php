@@ -153,6 +153,26 @@ class GitShell
     }
 
     /**
+     * @return Process
+     * @throws ErrorException
+     */
+    public function initialize(): Process
+    {
+        $process = $this->execute(['git', 'init']);
+
+        if (!$process->isSuccessful()) {
+            // @todo
+            throw new ErrorException(
+                'Could not initialize repository.',
+                0,
+                new ErrorException($process->getErrorOutput())
+            );
+        }
+
+        return $process;
+    }
+
+    /**
      * @param string $tag
      * @return Process
      * @throws ErrorException
