@@ -13,19 +13,9 @@ namespace Versio\Tests\Strategy;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Versio\Tests\Strategy\Mock\ExpressionStrategyMock;
 use Versio\Version\Version;
-use function file_get_contents;
-use function file_put_contents;
 
 class ExpressionStrategyTest extends TestCase
 {
-    public function testMissingOption()
-    {
-        $strategy = new ExpressionStrategyMock();
-        $this->expectExceptionMessage(
-            'Missing option key "expression" in strategy "Versio\Tests\Strategy\Mock\ExpressionStrategyMock".'
-        );
-        $strategy->validateOptions();
-    }
 
     public function testUpdate()
     {
