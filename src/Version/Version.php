@@ -16,7 +16,8 @@ use Versio\Utils;
 class Version
 {
 
-    private static $expression = '/^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/';
+    public static $expression = '(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?';
+
     /**
      * @var int $major
      */
@@ -167,7 +168,9 @@ class Version
      */
     public static function parse(string $version): Version
     {
-        if (preg_match(self::$expression, $version, $matches)) {
+        $expression = '/^' . self::$expression . '$/';
+
+        if (preg_match($expression, $version, $matches)) {
             return new Version(
                 Utils::strictParseInt($matches['major']),
                 Utils::strictParseInt($matches['minor']),

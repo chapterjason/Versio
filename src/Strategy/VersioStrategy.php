@@ -62,7 +62,7 @@ class VersioStrategy extends AbstractStrategy
      * @return string
      * @throws ErrorException
      */
-    private function getFile(): string
+    protected function getFile(): string
     {
         return $this->getOption('directory', getcwd()) . '/versio.json';
     }
