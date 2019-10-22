@@ -10,6 +10,8 @@
 
 namespace Versio\Strategy;
 
+use ErrorException;
+use ReflectionObject;
 use Versio\Version\Version;
 
 abstract class AbstractStrategy implements StrategyInterface
@@ -25,6 +27,30 @@ abstract class AbstractStrategy implements StrategyInterface
         $this->options = $options;
     }
 
-    public abstract function update(Version $version): void;
+    abstract public function update(Version $version): void;
+
+    /**
+     * @param string $key
+     * @param mixed|null $default
+     * @return mixed
+     * @throws ErrorException
+     */
+    protected function getOption(string $key, $default = null)
+    {
+        $value = $this->options[$key] ?? null;
+
+        if (null === $value) {
+            if (null === $default) {
+                $reflection = new ReflectionObject($this);
+                throw new ErrorException(
+                    'Missing option key "' . $key . '" in strategy "' . $reflection->getName() . '".'
+                );
+            }
+
+            return $default;
+        }
+
+        return $value;
+    }
 
 }
