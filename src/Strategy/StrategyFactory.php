@@ -68,7 +68,6 @@ class StrategyFactory
 
         if (null !== $strategy) {
             $strategy->setOptions($processedConfiguration);
-            $strategy->validateOptions();
         }
 
         return $strategy;

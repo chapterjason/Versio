@@ -245,25 +245,30 @@ abstract class AbstractVersionCommand extends Command
      */
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
-        if ($this->isMaster() && $this->getDefinition()->hasArgument('master')) {
-            $masterType = $input->getArgument('master');
+        if ($this->getDefinition()->hasArgument('master')) {
+            // if expression can not be merged into parent.
+            // The expression should only run if the argument master is present,
+            // so it means it is not the init command, which does not require the versio file.
+            if ($this->isMaster()) {
+                $masterType = $input->getArgument('master');
 
-            if (null === $masterType) {
-                $helper = $this->getHelper('question');
-                $question = new ChoiceQuestion(
-                    'Please select the next master version',
-                    ['minor', 'major']
-                );
-                $question->setErrorMessage('Next master version "%s" is invalid.');
+                if (null === $masterType) {
+                    $helper = $this->getHelper('question');
+                    $question = new ChoiceQuestion(
+                        'Please select the next master version',
+                        ['minor', 'major']
+                    );
+                    $question->setErrorMessage('Next master version "%s" is invalid.');
 
-                $masterType = $helper->ask($input, $output, $question);
+                    $masterType = $helper->ask($input, $output, $question);
+                }
+
+                if (null === $masterType) {
+                    throw new InvalidArgumentException('Missing parameter "master"');
+                }
+
+                $input->setArgument('master', $masterType);
             }
-
-            if (null === $masterType) {
-                throw new InvalidArgumentException('Missing parameter "master"');
-            }
-
-            $input->setArgument('master', $masterType);
         }
     }
 

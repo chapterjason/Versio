@@ -31,6 +31,7 @@ class Set extends AbstractVersionCommand
 
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
+        $this->versioFileManager->load();
         $value = $input->getArgument('value');
 
         if (null === $value) {
@@ -39,14 +40,14 @@ class Set extends AbstractVersionCommand
 
             $question->setValidator(
                 static function ($answer) {
-                return Version::parse($answer);
-            });
+                    return Version::parse($answer);
+                }
+            );
 
             $value = $helper->ask($input, $output, $question);
             $input->setArgument('value', $value);
         }
     }
-
 
     /**
      * @param InputInterface $input
