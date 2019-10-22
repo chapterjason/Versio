@@ -39,6 +39,7 @@ class VersioStrategy extends AbstractStrategy
     {
         $this->validateOptions();
         $file = $this->getFile();
+
         $versioFile = $this->versioFileManager->load($file);
         $versioFile->setVersion($version);
         $this->versioFileManager->save($versioFile, $file);
@@ -59,9 +60,10 @@ class VersioStrategy extends AbstractStrategy
 
     /**
      * @return string
+     * @throws ErrorException
      */
-    private function getFile()
+    private function getFile(): string
     {
-        return ($this->options['directory'] ?? getcwd()) . '/versio.json';
+        return $this->getOption('directory', getcwd()) . '/versio.json';
     }
 }

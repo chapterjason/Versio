@@ -57,9 +57,10 @@ class ComposerStrategy extends AbstractStrategy
 
     /**
      * @return string
+     * @throws ErrorException
      */
-    private function getFile()
+    private function getFile(): string
     {
-        return ($this->options['directory'] ?? getcwd()) . '/composer.json';
+        return $this->getOption('directory', getcwd()) . '/composer.json';
     }
 }
