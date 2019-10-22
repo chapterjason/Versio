@@ -57,15 +57,15 @@ class Init extends AbstractVersionCommand
             'version' => '0.1.0-DEV',
             'workflow' => [
                 'places' => [
-                    'beta',
+                    'BETA',
                 ],
                 'transitions' => [
-                    'master' => [
-                        'beta',
+                    'MASTER' => [
+                        'BETA',
                     ],
-                    'beta' => [
-                        'beta',
-                        'release',
+                    'BETA' => [
+                        'BETA',
+                        'RELEASE',
                     ],
                 ],
             ],
