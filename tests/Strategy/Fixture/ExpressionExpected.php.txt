@@ -1,0 +1,9 @@
+<?php
+class ExpressionInput
+{
+    public static $version = '1.0.0-ALPHA.1+build.005';
+    public function print()
+    {
+        echo self::$version;
+    }
+}

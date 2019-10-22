@@ -11,8 +11,10 @@
 namespace Versio\Strategy;
 
 use ErrorException;
-use ReflectionObject;
+use ReflectionClass;
+use ReflectionException;
 use Versio\Version\Version;
+use function get_called_class;
 
 abstract class AbstractStrategy implements StrategyInterface
 {
@@ -34,6 +36,7 @@ abstract class AbstractStrategy implements StrategyInterface
      * @param mixed|null $default
      * @return mixed
      * @throws ErrorException
+     * @throws ReflectionException
      */
     protected function getOption(string $key, $default = null)
     {
@@ -41,7 +44,7 @@ abstract class AbstractStrategy implements StrategyInterface
 
         if (null === $value) {
             if (null === $default) {
-                $reflection = new ReflectionObject($this);
+                $reflection = new ReflectionClass(get_called_class());
                 throw new ErrorException(
                     'Missing option key "' . $key . '" in strategy "' . $reflection->getName() . '".'
                 );
