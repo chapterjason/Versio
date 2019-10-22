@@ -105,6 +105,6 @@ This advanced configuration is some of the most advanced configurations you can 
 - [x] Strategies. This is the most needed feature, cause this will also change the versions in e.g. `composer.json`, `package.json` or in any file on any line.
     - [x] Versio - Sets the version in a `versio.json`.
     - [x] Composer - Sets the version in a `composer.json`.
-    - [ ] Expression - Replaces something `expression` by `replacement` in `files` (glob).
+    - [x] Expression - Replaces something `expression` by `replacement` in `files` (glob).
     - [ ] Line - Replaces line `line` in files `files`(glob) by `replacement`.
     - [ ] Npm - Sets the version in a `package.json`. Uses yarn if available.
