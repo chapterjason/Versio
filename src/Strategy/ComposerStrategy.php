@@ -11,9 +11,9 @@
 namespace Versio\Strategy;
 
 use ErrorException;
+use ReflectionException;
 use Symfony\Component\Process\Process;
 use Versio\Version\Version;
-use function dirname;
 
 class ComposerStrategy extends AbstractStrategy
 {
@@ -21,13 +21,12 @@ class ComposerStrategy extends AbstractStrategy
     /**
      * @param Version $version
      * @throws ErrorException
+     * @throws ReflectionException
      */
     public function update(Version $version): void
     {
-        $this->validateOptions();
-        $file = $this->getFile();
-
-        $process = new Process(['composer', 'config', 'version', $version->format()], dirname($file));
+        $directory = $this->getOption('directory');
+        $process = new Process(['composer', 'config', 'version', $version->format()], $directory);
         $process->run();
 
         if (!$process->isSuccessful()) {
@@ -42,25 +41,4 @@ class ComposerStrategy extends AbstractStrategy
         }
     }
 
-    /**
-     * @throws ErrorException
-     */
-    public function validateOptions(): void
-    {
-        $file = $this->getFile();
-
-        if (!file_exists($file)) {
-            throw new ErrorException('Expected composer file "' . $file . '" does not exists.');
-        }
-
-    }
-
-    /**
-     * @return string
-     * @throws ErrorException
-     */
-    protected function getFile(): string
-    {
-        return $this->getOption('directory', getcwd()) . '/composer.json';
-    }
 }

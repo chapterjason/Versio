@@ -17,8 +17,6 @@ interface StrategyInterface
 
     public function setOptions(array $options = []): void;
 
-    public function validateOptions(): void;
-
     public function update(Version $version): void;
 
 }

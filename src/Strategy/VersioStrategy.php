@@ -11,6 +11,7 @@
 namespace Versio\Strategy;
 
 use ErrorException;
+use ReflectionException;
 use Versio\Version\VersioFileManager;
 use Versio\Version\Version;
 
@@ -34,10 +35,10 @@ class VersioStrategy extends AbstractStrategy
     /**
      * @param Version $version
      * @throws ErrorException
+     * @throws ReflectionException
      */
     public function update(Version $version): void
     {
-        $this->validateOptions();
         $file = $this->getFile();
 
         $versioFile = $this->versioFileManager->load($file);
@@ -46,24 +47,12 @@ class VersioStrategy extends AbstractStrategy
     }
 
     /**
-     * @throws ErrorException
-     */
-    public function validateOptions(): void
-    {
-        $file = $this->getFile();
-
-        if (!file_exists($file)) {
-            throw new ErrorException('Expected versio file "' . $file . '" does not exists.');
-        }
-
-    }
-
-    /**
      * @return string
      * @throws ErrorException
+     * @throws ReflectionException
      */
     protected function getFile(): string
     {
-        return $this->getOption('directory', getcwd()) . '/versio.json';
+        return $this->getOption('directory') . '/versio.json';
     }
 }

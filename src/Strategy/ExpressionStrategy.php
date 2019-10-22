@@ -15,7 +15,6 @@ use ReflectionException;
 use Symfony\Component\Finder\Finder;
 use Versio\Version\Version;
 use Versio\Version\VersionReplacer;
-use function preg_replace;
 
 class ExpressionStrategy extends AbstractStrategy
 {
@@ -45,6 +44,7 @@ class ExpressionStrategy extends AbstractStrategy
 
     /**
      * @throws ErrorException
+     * @throws ReflectionException
      */
     protected function getFiles()
     {
@@ -52,16 +52,6 @@ class ExpressionStrategy extends AbstractStrategy
         $finder->files()->name($this->getOption('file'));
 
         return $finder->getIterator();
-    }
-
-    /**
-     * @throws ErrorException
-     */
-    public function validateOptions(): void
-    {
-        $this->getOption('expression');
-        $this->getOption('replacement');
-        $this->getOption('file');
     }
 
 }

@@ -14,7 +14,6 @@ use ErrorException;
 use ReflectionClass;
 use ReflectionException;
 use Versio\Version\Version;
-use function get_called_class;
 
 abstract class AbstractStrategy implements StrategyInterface
 {
@@ -33,24 +32,19 @@ abstract class AbstractStrategy implements StrategyInterface
 
     /**
      * @param string $key
-     * @param mixed|null $default
      * @return mixed
      * @throws ErrorException
      * @throws ReflectionException
      */
-    protected function getOption(string $key, $default = null)
+    protected function getOption(string $key)
     {
         $value = $this->options[$key] ?? null;
 
         if (null === $value) {
-            if (null === $default) {
-                $reflection = new ReflectionClass(get_called_class());
-                throw new ErrorException(
-                    'Missing option key "' . $key . '" in strategy "' . $reflection->getName() . '".'
-                );
-            }
-
-            return $default;
+            $reflection = new ReflectionClass(get_called_class());
+            throw new ErrorException(
+                'Missing option key "' . $key . '" in strategy "' . $reflection->getName() . '".'
+            );
         }
 
         return $value;
