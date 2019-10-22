@@ -79,7 +79,7 @@ abstract class AbstractVersionCommand extends Command
      * @return string|null
      * @throws ErrorException
      */
-    protected function getType()
+    protected function getType(): ?string
     {
         $version = $this->getVersioFile()->getVersion();
 
@@ -243,9 +243,9 @@ abstract class AbstractVersionCommand extends Command
      * @param OutputInterface $output
      * @throws ErrorException
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
-        if ($this->getDefinition()->hasArgument('master') && $this->isMaster()) {
+        if ($this->isMaster() && $this->getDefinition()->hasArgument('master')) {
             $masterType = $input->getArgument('master');
 
             if (null === $masterType) {

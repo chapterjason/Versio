@@ -33,13 +33,19 @@ class VersioFileManager
     /**
      * VersioFileManager constructor.
      * @param WorkflowGenerator $workflowGenerator
+     * @param Filesystem $filesystem
      */
-    public function __construct(WorkflowGenerator $workflowGenerator)
+    public function __construct(WorkflowGenerator $workflowGenerator, Filesystem $filesystem)
     {
         $this->workflowGenerator = $workflowGenerator;
-        $this->filesystem = new Filesystem();
+        $this->filesystem = $filesystem;
     }
 
+    /**
+     * @param VersioFile $versioFile
+     * @param string|null $file
+     * @return VersioFileManager
+     */
     public function save(VersioFile $versioFile, string $file = null): VersioFileManager
     {
         if (null === $file) {
@@ -53,11 +59,19 @@ class VersioFileManager
         return $this;
     }
 
-    private function getFile(): string
+    /**
+     * @return string
+     */
+    protected function getFile(): string
     {
         return getcwd() . '/versio.json';
     }
 
+    /**
+     * @param string|null $file
+     * @return VersioFile
+     * @throws ErrorException
+     */
     public function load(string $file = null): VersioFile
     {
         if (null === $file) {
@@ -79,6 +93,10 @@ class VersioFileManager
         return new VersioFile($configuration);
     }
 
+    /**
+     * @param string|null $file
+     * @return bool
+     */
     public function exists(string $file = null): bool
     {
         if (null === $file) {

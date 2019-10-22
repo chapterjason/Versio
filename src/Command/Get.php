@@ -10,6 +10,7 @@
 
 namespace Versio\Command;
 
+use ErrorException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,6 +28,7 @@ class Get extends AbstractVersionCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int|void|null
+     * @throws ErrorException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

@@ -29,7 +29,7 @@ class Set extends AbstractVersionCommand
             ->addArgument('value', InputArgument::REQUIRED, 'Version to set');
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $value = $input->getArgument('value');
 

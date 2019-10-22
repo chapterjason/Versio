@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Throwable;
 use Versio\Version\Version;
 
 class Application extends BaseApplication
@@ -29,7 +30,7 @@ class Application extends BaseApplication
     {
         $this->kernel = $kernel;
         $hash = '@git_commit_short@';
-        $hash = (strpos($hash, "@") === 0 ? '' : '+sha.' . $hash);
+        $hash = (strpos($hash, '@') === 0 ? '' : '+sha.' . $hash);
 
         $version = Version::parse(self::$version . $hash);
 
@@ -46,6 +47,7 @@ class Application extends BaseApplication
 
     /**
      * {@inheritdoc}
+     * @throws Throwable
      */
     public function doRun(InputInterface $input, OutputInterface $output): int
     {

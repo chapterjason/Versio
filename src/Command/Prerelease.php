@@ -50,7 +50,7 @@ class Prerelease extends AbstractVersionCommand
      * @param OutputInterface $output
      * @throws ErrorException
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $places = $this->getPlaces();
 

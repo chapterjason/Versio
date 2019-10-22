@@ -65,7 +65,7 @@ class VersioFileConfiguration implements ConfigurationInterface
         // @formatter:on
     }
 
-    private function addStrategySection(ArrayNodeDefinition $rootNode)
+    private function addStrategySection(ArrayNodeDefinition $rootNode): void
     {
         // @formatter:off
         $rootNode

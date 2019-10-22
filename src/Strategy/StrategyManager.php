@@ -36,7 +36,7 @@ class StrategyManager
      * @param Version $version
      * @throws ErrorException
      */
-    public function update(VersioFile $versioFile, Version $version)
+    public function update(VersioFile $versioFile, Version $version): void
     {
         $strategies = $this->resolver->resolve($versioFile);
 

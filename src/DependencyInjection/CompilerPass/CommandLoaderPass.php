@@ -10,8 +10,8 @@
 
 namespace Versio\DependencyInjection\CompilerPass;
 
-
 use InvalidArgumentException;
+use ReflectionException;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
@@ -24,6 +24,7 @@ class CommandLoaderPass implements CompilerPassInterface
 
     /**
      * {@inheritDoc}
+     * @throws ReflectionException
      */
     public function process(ContainerBuilder $container): void
     {
@@ -37,19 +38,19 @@ class CommandLoaderPass implements CompilerPassInterface
             $class = $container->getParameterBag()->resolveValue($definition->getClass());
 
 
-            if (!$r = $container->getReflectionClass($class)) {
+            if (!$reflection = $container->getReflectionClass($class)) {
                 throw new InvalidArgumentException(
                     sprintf('Class "%s" used for service "%s" cannot be found.', $class, $id)
                 );
             }
 
-            if ($r->isSubclassOf(AbstractVersionCommand::class)) {
+            if ($reflection->isSubclassOf(AbstractVersionCommand::class) && method_exists($class, 'getDefaultName')) {
                 $lazyCommandMap[$class::getDefaultName()] = $id;
                 $lazyCommandRefs[$id] = new TypedReference($id, $class);
             }
         }
 
-        $container->register("custom.command_loader", ContainerCommandLoader::class)
+        $container->register('custom.command_loader', ContainerCommandLoader::class)
             ->setPublic(true)
             ->setArguments([ServiceLocatorTagPass::register($container, $lazyCommandRefs), $lazyCommandMap]);
     }

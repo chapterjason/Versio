@@ -116,7 +116,7 @@ class GitShell
         $branches = preg_split("/\r?\n/", trim($process->getOutput()));
 
         $branches = array_map(
-            function ($branch) {
+            static function ($branch) {
                 return preg_replace("/^\*?\s+|\s+$/", '', $branch);
             },
             $branches

@@ -16,6 +16,7 @@ class InvalidVersionException extends RuntimeException
 {
     /**
      * InvalidVersionException constructor.
+     * @param string $version
      */
     public function __construct(string $version)
     {
