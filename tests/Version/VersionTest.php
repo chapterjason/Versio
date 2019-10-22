@@ -8,7 +8,7 @@
  * File that was distributed with this source code.
  */
 
-namespace App\Tests\Versio;
+namespace Versio\Tests\Version;
 
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Versio\Exception\InvalidVersionException;

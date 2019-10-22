@@ -8,12 +8,10 @@
  * File that was distributed with this source code.
  */
 
-namespace App\Tests\Versio;
+namespace Versio\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Versio\Utils;
-use function is_nan;
-use const NAN;
 
 class UtilsTest extends TestCase
 {
