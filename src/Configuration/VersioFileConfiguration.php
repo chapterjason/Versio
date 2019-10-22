@@ -76,12 +76,13 @@ class VersioFileConfiguration implements ConfigurationInterface
                             ->enumNode('type')
                                 ->isRequired()
                                 ->cannotBeEmpty()
-                                ->values(['versio', 'composer'])
+                                ->values(['versio', 'composer', 'expression'])
                             ->end()
                             ->arrayNode('options')->end()
                         ->end()
                     ->end()
                 ->end() // strategies
+
             ->end();
         // @formatter:on
     }

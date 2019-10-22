@@ -53,6 +53,11 @@ class VersioFileManager
         }
 
         $configuration = $versioFile->getConfiguration();
+
+        if (0 === count($configuration['strategies'])) {
+            unset($configuration['strategies']);
+        }
+
         $encoded = json_encode($configuration, JSON_PRETTY_PRINT);
         $this->filesystem->dumpFile($file, $encoded);
 
