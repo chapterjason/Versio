@@ -86,6 +86,12 @@ This advanced configuration is some of the most advanced configurations you can 
 
 - [ ] Website
 - [ ] Documentation
+- [ ] Free definable places
+- [ ] Better git interactions
+- [ ] Ensure that all branches are localy available. Currently its enough if you are `git fetch --all && git pull --all` before working with the command, or ensure that the master and all release branches localy available.
+- [ ] Command tests. Currently not that easy cause of the git interactions.
+- [ ] `validate` Command, to validate the versio file.
+- [ ] As mentioned in the `WorkflowGenerator` ensure that every path can end in release.
 
 ### 0.2.0
 
@@ -93,10 +99,7 @@ This advanced configuration is some of the most advanced configurations you can 
 - [ ] More detailed error messages
 - [ ] Better command description and help texts
 - [ ] Commit message format
-- [ ] Free definable places
-- [ ] Command tests. Currently not that easy cause of the git interactions.
-- [ ] Better git interactions
-- [ ] Ensure that all branches are localy available. Currently its enough if you are `git fetch --all && git pull --all` before working with the command, or ensure that the master and all release branches localy available.
+- [ ] Strategy tests
 
 ### 0.1.0
 
