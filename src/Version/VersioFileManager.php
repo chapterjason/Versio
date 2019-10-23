@@ -54,7 +54,7 @@ class VersioFileManager
 
         $configuration = $versioFile->getConfiguration();
 
-        if (0 === count($configuration['strategies'])) {
+        if (isset($configuration['strategies']) && 0 === count($configuration['strategies'])) {
             unset($configuration['strategies']);
         }
 
