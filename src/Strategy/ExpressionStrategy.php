@@ -13,8 +13,12 @@ namespace Versio\Strategy;
 use ErrorException;
 use ReflectionException;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Versio\Version\Version;
 use Versio\Version\VersionReplacer;
+use function array_map;
+use function file_get_contents;
+use function iterator_to_array;
 
 class ExpressionStrategy extends AbstractStrategy
 {
@@ -36,22 +40,34 @@ class ExpressionStrategy extends AbstractStrategy
         $replacement = $replacer->replace($replacement);
 
         foreach ($files as $file) {
-            $content = $file->getContents();
+            $content = file_get_contents($file);
             $content = preg_replace($expression, $replacement, $content);
-            file_put_contents($file->getRealPath(), $content);
+            file_put_contents($file, $content);
         }
     }
 
     /**
+     * @return string[]
      * @throws ErrorException
      * @throws ReflectionException
      */
-    protected function getFiles()
+    public function getFiles(): array
     {
-        $finder = new Finder();
-        $finder->files()->name($this->getOption('file'));
+        $pattern = $this->getOption('pattern');
+        $directories = $this->getOption('directories');
 
-        return $finder->getIterator();
+        $finder = new Finder();
+        $finder->files()->in($directories)->name($pattern);
+
+        return array_map(
+            static function ($item) {
+                /**
+                 * @var SplFileInfo $item
+                 */
+                return $item->getPathname();
+            },
+            iterator_to_array($finder->getIterator(), false)
+        );
     }
 
 }

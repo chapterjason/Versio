@@ -17,6 +17,7 @@
         "symfony/yaml": "4.3.*"
     },
     "require-dev": {
+        "mikey179/vfsstream": "^1.6",
         "symfony/phpunit-bridge": "^4.3"
     },
     "config": {

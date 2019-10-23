@@ -10,8 +10,9 @@
 
 namespace Versio\Tests\Strategy;
 
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
-use Versio\Tests\Strategy\Mock\ExpressionStrategyMock;
+use org\bovigo\vfs\vfsStream;
+use Versio\Strategy\ExpressionStrategy;
+use Versio\Tests\TestCase;
 use Versio\Version\Version;
 
 class ExpressionStrategyTest extends TestCase
@@ -19,40 +20,29 @@ class ExpressionStrategyTest extends TestCase
 
     public function testUpdate()
     {
-        $strategy = new ExpressionStrategyMock();
+        $expectedFile = $this->getUrl('ExpressionExpected.php.txt');
+        $resultFile = $this->getUrl('ExpressionInput.php.txt');
+        $version = Version::parse('1.0.0-ALPHA.1+build.005');
+        $strategy = new ExpressionStrategy();
 
         $strategy->setOptions(
             [
-                'files' => [],
+                'directories' => [$this->root->url()],
+                'pattern' => 'ExpressionInput.php.txt',
                 'expression' => "version = '{{SEMVER}}';",
                 'replacement' => "version = '{{VERSION}}';",
             ]
         );
 
-        $version = Version::parse('1.0.0-ALPHA.1+build.005');
         $strategy->update($version);
 
-        $expected = $this->getExpected();
-        $result = $this->getOutput();
-
-        $this->assertSame($expected, $result);
-    }
-
-    protected function getExpected()
-    {
-        return file_get_contents(__DIR__ . '/Fixture/ExpressionExpected.php.txt');
-    }
-
-    protected function getOutput()
-    {
-        return file_get_contents(__DIR__ . '/Fixture/ExpressionInput.php.txt');
+        $this->assertFileEquals($expectedFile, $resultFile);
     }
 
     protected function setUp()
     {
         parent::setUp();
-        $content = file_get_contents(__DIR__ . '/Fixture/ExpressionInput.php.txt.tpl');
-        file_put_contents(__DIR__ . '/Fixture/ExpressionInput.php.txt', $content);
+        $this->root = vfsStream::copyFromFileSystem(__DIR__ . '/Fixture/ExpressionStrategy', $this->root);
     }
 
 
