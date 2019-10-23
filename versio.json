@@ -1,5 +1,5 @@
 {
-    "version": "0.1.0-DEV",
+    "version": "0.1.0-BETA.1",
     "strategies": [
         {
             "type": "expression",
