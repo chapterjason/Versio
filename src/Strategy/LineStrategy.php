@@ -17,7 +17,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Versio\Version\Version;
 use Versio\Version\VersionReplacer;
 
-class ExpressionStrategy extends AbstractStrategy
+class LineStrategy extends AbstractStrategy
 {
 
     /**
@@ -30,15 +30,15 @@ class ExpressionStrategy extends AbstractStrategy
         $files = $this->getFiles();
         $replacer = new VersionReplacer($version);
 
-        $expression = $this->getOption('expression');
+        $lineNumber = $this->getOption('line');
         $replacement = $this->getOption('replacement');
-
-        $expression = '/' . str_replace('{{SEMVER}}', Version::$expression, $expression) . '/';
         $replacement = $replacer->replace($replacement);
 
         foreach ($files as $file) {
             $content = file_get_contents($file);
-            $content = preg_replace($expression, $replacement, $content);
+            $lines = preg_split("/\r?\n/", $content);
+            array_splice($lines, $lineNumber - 1, 1, $replacement);
+            $content = implode("\n", $lines);
             file_put_contents($file, $content);
         }
     }

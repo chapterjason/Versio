@@ -109,5 +109,5 @@ This advanced configuration is some of the most advanced configurations you can 
     - [x] Versio
     - [x] Composer
     - [x] Expression
-    - [ ] Line
+    - [x] Line
     - [ ] Npm
