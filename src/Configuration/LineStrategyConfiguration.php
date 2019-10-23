@@ -13,7 +13,7 @@ namespace Versio\Configuration;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-class ExpressionStrategyConfiguration implements ConfigurationInterface
+class LineStrategyConfiguration implements ConfigurationInterface
 {
 
     /**
@@ -23,7 +23,7 @@ class ExpressionStrategyConfiguration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('expression');
+        $treeBuilder = new TreeBuilder('line');
 
         $rootNode = $treeBuilder->getRootNode();
 
@@ -38,7 +38,8 @@ class ExpressionStrategyConfiguration implements ConfigurationInterface
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()
-                ->scalarNode('expression')
+                ->integerNode('line')
+                    ->min(1)
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()

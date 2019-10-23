@@ -105,9 +105,9 @@ This advanced configuration is some of the most advanced configurations you can 
 
 - [x] `init` command. Allows to init the versio in a git project or init a new git before.
 - [x] `get` command. Displays the current version.
-- [x] Strategies. This is the most needed feature, cause this will also change the versions in e.g. `composer.json`, `package.json` or in any file on any line.
-    - [x] Versio - Sets the version in a `versio.json`.
-    - [x] Composer - Sets the version in a `composer.json`.
-    - [x] Expression - Replaces something `expression` by `replacement` in `files` (glob).
-    - [ ] Line - Replaces line `line` in files `files`(glob) by `replacement`.
-    - [ ] Npm - Sets the version in a `package.json`. Uses yarn if available.
+- [x] Strategies.
+    - [x] Versio
+    - [x] Composer
+    - [x] Expression
+    - [x] Line
+    - [ ] Npm
