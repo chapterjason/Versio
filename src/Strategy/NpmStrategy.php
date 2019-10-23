@@ -34,7 +34,11 @@ class NpmStrategy extends AbstractStrategy
             throw new ErrorException('Could not found command "npm" or command "yarn".');
         }
 
-        $command = $yarn ? ['yarn', 'version', '--new-version'] : ['npm', 'version'];
+        $command = $yarn ? ['yarn', 'version', '--no-git-tag-version', '--new-version'] : [
+            'npm',
+            'version',
+            '--no-git-tag-version',
+        ];
         $command[] = $version->format();
 
         $process = new Process($command, $directory);
