@@ -1,5 +1,18 @@
 {
     "version": "0.1.0-DEV",
+    "strategies": [
+        {
+            "type": "expression",
+            "options": {
+                "directories": [
+                    "src"
+                ],
+                "pattern": "Application.php",
+                "expression": "version = '{{SEMVER}}';",
+                "replacement": "version = '{{VERSION}}';"
+            }
+        }
+    ],
     "workflow": {
         "places": [
             "BETA"
