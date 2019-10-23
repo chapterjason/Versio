@@ -31,8 +31,11 @@ class ExpressionStrategyConfiguration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('directories')
+                    ->requiresAtLeastOneElement()
                     ->defaultValue([getcwd()])
-                    ->cannotBeEmpty()
+                    ->scalarPrototype()
+                        ->cannotBeEmpty()
+                    ->end()
                 ->end()
                 ->scalarNode('pattern')
                     ->isRequired()

@@ -78,7 +78,9 @@ class VersioFileConfiguration implements ConfigurationInterface
                                 ->cannotBeEmpty()
                                 ->values(['versio', 'composer', 'expression', 'line', 'npm'])
                             ->end()
-                            ->arrayNode('options')->end()
+                            ->arrayNode('options')
+                                ->ignoreExtraKeys(false)
+                            ->end()
                         ->end()
                     ->end()
                 ->end() // strategies
