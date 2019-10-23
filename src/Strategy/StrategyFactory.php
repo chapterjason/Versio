@@ -15,6 +15,7 @@ use Symfony\Component\Config\Definition\Processor;
 use Versio\Configuration\ComposerStrategyConfiguration;
 use Versio\Configuration\ExpressionStrategyConfiguration;
 use Versio\Configuration\LineStrategyConfiguration;
+use Versio\Configuration\NpmStrategyConfiguration;
 use Versio\Configuration\VersioStrategyConfiguration;
 use Versio\Version\VersioFileManager;
 
@@ -58,6 +59,9 @@ class StrategyFactory
         } else if ($type === 'line') {
             $configuration = new LineStrategyConfiguration();
             $strategy = new LineStrategy();
+        } else if ($type === 'npm') {
+            $configuration = new NpmStrategyConfiguration();
+            $strategy = new NpmStrategy();
         } else {
             throw new ErrorException('Unknown strategy "' . $type . '".');
         }
