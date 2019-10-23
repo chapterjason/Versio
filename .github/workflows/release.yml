@@ -1,0 +1,66 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+name: Create Release
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: '7.3'
+          extension-csv: intl
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install box
+        run: wget https://github.com/humbug/box/releases/download/3.8.1/box.phar
+
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader --prefer-dist --no-progress --no-suggest
+
+      - name: Dump environment
+        run: composer dump-env prod
+
+      - name: Clear cache
+        run: php bin/console cache:clear --env=prod --no-debug
+
+      - name: Warmup cache
+        run: php bin/console cache:warmup --env=prod --no-debug
+
+      - name: Warmup class cache
+        run: ./bin/versio -q;
+
+      - name: Build
+        run: php box.phar build
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: uploade_release_assets
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/versio.phar
+          asset_name: versio.phar
+          asset_content_type: application/zip
