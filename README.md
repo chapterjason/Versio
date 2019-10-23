@@ -110,4 +110,4 @@ This advanced configuration is some of the most advanced configurations you can 
     - [x] Composer
     - [x] Expression
     - [x] Line
-    - [ ] Npm
+    - [x] Npm
