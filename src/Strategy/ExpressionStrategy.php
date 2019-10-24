@@ -54,7 +54,7 @@ class ExpressionStrategy extends AbstractStrategy
         $directories = $this->getOption('directories');
 
         $finder = new Finder();
-        $finder->files()->in($directories)->name($pattern);
+        $finder->files()->ignoreDotFiles(false)->in($directories)->name($pattern);
 
         return array_map(
             static function ($item) {
