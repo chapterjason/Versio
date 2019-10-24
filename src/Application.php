@@ -21,7 +21,7 @@ use Versio\Version\Version;
 
 class Application extends BaseApplication
 {
-    public static $version = '0.1.0-BETA.2-DEV';
+    public static $version = '0.1.0-BETA.2';
 
     private $kernel;
     private $commandsRegistered = false;
